@@ -107,7 +107,7 @@ const Home = () => {
 
             </span>
 
-            <div className={`col-start-1 col-end-4 row-start-3 row-end-4 mx-4 `}>
+            <div className={`col-start-1 col-end-4 row-start-3 row-end-4 mx-4 max-w-[1100px] `}>
                 <DynamicMap activeYear={activeYear?.value} />
 
             </div>
