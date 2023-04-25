@@ -3,93 +3,80 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
 import React, { useEffect, useState } from "react";
-import GSheetReader from 'g-sheets-api'
+import { useData } from '../DataFetcher';
 
 
+const Chart = ({ activeYear, type }) => {
 
-const Chart = () => {
+    const Data = useData();
 
-
-    const [columns, setColumns] = useState([]);
-    const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
 
 
     useEffect(() => {
 
-        const options = {
-            apiKey: process.env.NEXT_PUBLIC_GOOGLE_SHEETS_API,
-            sheetId: '1Y_yiT-_7IimioBvcqiCPwLzTLazfdRyzZ4k3cpQXiAw',
-            sheetNumber: 1,
-            sheetName: 'sample_data', // if sheetName is supplied, this will take precedence over sheetNumber
-            returnAllResults: true,
+        if (Data.length > 0 && activeYear) {
+
+            // Finds Unique Business Categories / Asset Name / Lat etc..
+            const hash = {};
+            for (let i = 0; i < Data.length; i++) {
+                hash[Data[i][type]] = true;
+            }
+
+            const uniqueArr = Object.keys(hash).map(String);
+            // console.log(uniqueArr)
+
+            // console.log(Object.keys(JSON.parse(Data[0]["Risk Factors"])))
+            // console.log(Object.values(JSON.parse(Data[0]["Risk Factors"])))
+
+            const filtered = [];
+            let categoryName = "";
+            let categoryData = [];
+            // Creates a series for each Category {name:"categoryname", categoryData:[{y:"riskfactor value", ...RiskFactors}]}  
+            for (let b = 0; b < uniqueArr.length; b++) {
+
+                categoryName = uniqueArr[b];
+
+                for (let i = 0; i < Data.length; i++) {
+                    if (Data[i]["Year"] == activeYear && Data[i][type] == uniqueArr[b]) {
+
+                        let riskFactors = {};
+
+                        let factorsKey = Object.keys(JSON.parse(Data[i]["Risk Factors"]))
+                        let factorsValue = Object.values(JSON.parse(Data[i]["Risk Factors"]))
+
+                        for (let c = 0; c < factorsKey.length; c++) {
+                            riskFactors[factorsKey[c]] = factorsValue[c].toFixed(2)
+                        }
+                        riskFactors['y'] = Number(Data[i]['Risk Rating']);
+                        riskFactors['Asset Name'] = Data[i]['Asset Name'];
+                        riskFactors['Year'] = Data[i]['Year'];
+
+                        categoryData.push(riskFactors)
+
+                    }
+                }
+
+                filtered.push({
+                    name: categoryName,
+                    data: categoryData.sort(function (x, y) {
+                        if (x[0] === y[0]) {
+                            return 0;
+                        } else {
+                            return x[0] < y[0] ? -1 : 1
+                        }
+                    }),
+                    visible: type == "Asset Name" ? false : true,
+                    // Datapoints above this range won't be displayed unless with only 2 dimensional array values. i,e no risk factors or other datapoints 
+                    turboThreshold: 1500
+                })
+            }
+
+            setFilteredData(filtered)
+            // console.log(filtered)
         }
 
-        GSheetReader(
-            options,
-            results => {
-
-                // Finds Unique Business Categories 
-                const hash = {};
-                for (let i = 0; i < results.length; i++) {
-                    hash[results[i]["Business Category"]] = true;
-                }
-
-                const uniqueArr = Object.keys(hash).map(String);
-                setColumns(uniqueArr)
-                // console.log(uniqueArr)
-
-                // console.log(Object.keys(JSON.parse(results[0]["Risk Factors"])))
-                // console.log(Object.values(JSON.parse(results[0]["Risk Factors"])))
-
-                const filtered = [];
-                let categoryName = "";
-                let categoryData = [];
-                // Create a series for each Category {name:"CategoryName", data:[]}  
-                for (let b = 0; b < uniqueArr.length; b++) {
-
-                    categoryName = uniqueArr[b];
-
-                    for (let i = 0; i < results.length; i++) {
-                        if (results[i]["Year"] == "2040" && results[i]["Business Category"] == uniqueArr[b]) {
-
-                            let riskFactors = {};
-
-                            let factorsKey = Object.keys(JSON.parse(results[i]["Risk Factors"]))
-                            let factorsValue = Object.values(JSON.parse(results[i]["Risk Factors"]))
-
-                            for (let c = 0; c < factorsKey.length; c++) {
-                                riskFactors[factorsKey[c]] = factorsValue[c].toFixed(2)
-                            }
-                            riskFactors['y'] = Number(results[i]['Risk Rating']);
-                            riskFactors['Asset Name'] = results[i]['Asset Name'];
-                            
-                            categoryData.push(riskFactors)
-
-                        }
-                    }
-
-                    filtered.push({
-                        name: categoryName,
-                        data: categoryData.sort(function (x, y) {
-                            if (x[0] === y[0]) {
-                                return 0;
-                            } else {
-                                return x[0] < y[0] ? -1 : 1
-                            }
-                        }),
-                    }
-                    
-                    )
-                }
-
-                setData(filtered)
-                // console.log(filtered)
-            },
-            error => {
-                // OPTIONAL: handle errors here
-            });
-
-    }, [])
+    }, [Data, activeYear, type])
 
     const options = {
         chart: {
@@ -97,10 +84,10 @@ const Chart = () => {
             zoomType: 'x'
         },
         title: {
-            text: 'Risk Rating By Business Category '
+            text: `Risk Rating By ${type} (${activeYear}) `
         },
         subtitle: {
-            text: '(Highlight area for closer view)'
+            text: `${type == "Business Category" ? '(Highlight area for closer view)': type == 'Asset Name' ? '(Select Asset Name From Legend To View Data)': ""}`
         },
 
         xAxis: {
@@ -124,43 +111,22 @@ const Chart = () => {
                 let tooltip = ""
                 for (let k = 0; k < factorsKeys.length; k++) {
 
-                    if ((factorsKeys[k] != "y") && (factorsKeys[k] != "Asset Name")) {
+                    if ((factorsKeys[k] != "y") && (factorsKeys[k] != "Asset Name") && (factorsKeys[k] != "Year")) {
                         tooltip += `${factorsKeys[k]} : ${factorsValues[k]} <br>`
                     }
                 }
-                return `<b> ${this.point.options['Asset Name']} </b> <br> Risk Rating` + `<b> ${this.y}</b>` + '<br> <br>' + tooltip;
+                return `<b> ${this.point.options['Asset Name']} - (${this.point.options['Year']}) </b> <br> Risk Rating` + `<b> ${this.y}</b>` + '<br> <br>' + tooltip;
             }
         },
-        plotOptions: {
-            series: {
-                pointStart: new Date('2030').getTime(),
-                boostThreshold: 1000
-            }
-        },
-        series: data
+        series: filteredData
     }
-
 
     return (
         <React.Fragment >
-
-            {data.length < 0 ?
-
-                <>
-                    <span className={`flex mx-auto p-6 bg-[grey] w-[30%] h-[35px] rounded animate-pulse `}>  </span>
-                    <span className={`flex mx-auto p-6 bg-[grey] w-[20%] h-[30px] rounded animate-pulse my-2 `}>  </span>
-
-                    <span className={`flex mx-auto p-6 bg-[grey] w-[75%] h-[35%] rounded animate-pulse my-2 `}>  </span>
-
-                </>
-                :
-
-                <HighchartsReact
-                    highcharts={Highcharts}
-                    options={options}
-                />
-            }
-
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={options}
+            />
         </React.Fragment>
     )
 }

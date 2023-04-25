@@ -55,3 +55,10 @@ body {
       /* rotating 45deg counterclock to adjust marker content back to normal */
       transform: rotate(-45deg);
   }
+
+  /* Highcharts Wrapper Full Height */
+  div[data-highcharts-chart] {
+    height: 100%;
+    width: 100%;
+  }
+  
