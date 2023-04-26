@@ -4,7 +4,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import InsightsIcon from '@mui/icons-material/Insights';
 
 // Custom Components
-import Table from '../components/Tables';
+import Table from '../components/Table';
 import Chart from '../components/Chart';
 import ThemeSwitch from '../components/ThemeSwitch';
 import { useData } from '../DataFetcher';
@@ -99,7 +99,7 @@ const Home = () => {
 
                 <span className={`flex`}>
                     <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] dark:text-white mr-4 my-auto`}>
-                        Select Year
+                        Select Decade
                     </p>
 
                     <Select
@@ -150,7 +150,7 @@ const Home = () => {
             </div>
 
             <div className={`col-start-1 col-end-8 row-start-4 row-end-5 m-10 `}>
-                <Table toggle={toggle}/>
+                <Table activeYear={activeYear?.value} toggle={toggle}/>
 
             </div>
 
