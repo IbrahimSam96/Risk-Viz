@@ -1,6 +1,6 @@
 # Risk-Viz
 
-A data visualization assesment displaying information related to risk factors and overall risk rating for businesses. 
+A data visualization assesment displaying climate risk score, risk factors and overall risk rating for businesses. 
 
 
 
