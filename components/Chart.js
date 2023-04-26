@@ -81,13 +81,24 @@ const Chart = ({ activeYear, type }) => {
     const options = {
         chart: {
             type: 'line',
-            zoomType: 'x'
+            zoomType: 'x',
+            backgroundColor: "transparent", 
+
         },
         title: {
-            text: `Risk Rating By ${type} (${activeYear}) `
+            text: `Risk Rating By ${type} (${activeYear}) `,
+            style: {
+                color: "teal",
+                fontSize: "1em",
+                fontWeight:"bold"
+            }
         },
         subtitle: {
-            text: `${type == "Business Category" ? '(Highlight area for closer view)': type == 'Asset Name' ? '(Select Asset Name From Legend To View Data)': ""}`
+            text: `${type == "Business Category" ? '(Highlight area for closer view)': type == 'Asset Name' ? '(Select Asset Name From Legend To View Data)': ""}`,
+            style: {
+                fontSize: "1em",
+                fontWeight:"bold"
+            }
         },
 
         xAxis: {
