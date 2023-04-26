@@ -4,9 +4,8 @@ import { TableCell, TableRow } from "@mui/material";
 import { useData } from "../DataFetcher";
 
 import { createTheme, ThemeProvider } from "@mui/material";
-import { color } from "highcharts";
 
-const Table = ({toggle}) => {
+const Table = ({toggle, activeYear}) => {
 
     const Data = useData();
 
@@ -78,7 +77,9 @@ const Table = ({toggle}) => {
         if (Data.length > 0) {
             const rowData = [];
             for (let i = 1; i < Data.length; i++) {
-                rowData.push(Object.values(Data[i]))
+                if(Data[i]['Year'] == activeYear){
+                    rowData.push(Object.values(Data[i]))
+                }
             }
             setData(rowData);
 
@@ -98,7 +99,7 @@ const Table = ({toggle}) => {
             setMin(min)
         }
 
-    }, [Data])
+    }, [Data, activeYear])
 
     const columns = [
         {
@@ -168,12 +169,11 @@ const Table = ({toggle}) => {
         },
         {
             name: "Risk Factors",
-            Label: "Asset Name",
+            Label: "Risk Factors",
             options: {
-                display: "excluded",
+                display: 'excluded',
                 viewColumns: false,
-                filter: false,
-                sortThirdClickReset: true,
+                filter: true,
 
             }
 
@@ -182,6 +182,7 @@ const Table = ({toggle}) => {
             name: "Year",
             Label: "Year",
             options: {
+                sort: false,
                 sortThirdClickReset: true,
                 setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}}),
                 setCellProps: v => {
