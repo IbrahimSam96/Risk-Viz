@@ -1,18 +1,19 @@
 import MUIDataTable from "mui-datatables";
 import React, { useEffect, useState } from "react";
-import GSheetReader from 'g-sheets-api'
 import { TableCell, TableRow } from "@mui/material";
 import { useData } from "../DataFetcher";
 
+import { createTheme, ThemeProvider } from "@mui/material";
+import { color } from "highcharts";
 
-
-const Table = () => {
+const Table = ({toggle}) => {
 
     const Data = useData();
 
     const options = {
         selectableRows: "none",
         expandableRowsOnClick: true,
+        expandableRowsHeader:false,
         expandableRows: true,
         renderExpandableRow: (rowData, rowMeta) => {
             // console.log(rowData, rowMeta);
@@ -23,21 +24,21 @@ const Table = () => {
             return (
                 <React.Fragment>
                     <tr>
-                        <td colSpan={6}>
-                            <TableRow >
-                                <TableCell component="th" scope="row" className={`font-bold`}>
+                        <td colSpan={7}>
+                            <TableRow sx={{display:"inline-table", width:"100%"}} >
+                                <TableCell sx={{width:"200px", color:`${toggle ? 'black' : "white"}`}} align="left" className={`font-bold`}>
                                     Risk Factor
                                 </TableCell>
-                                <TableCell component="th" scope="row" className={`font-bold`}>
-                                    Risk Ratio
+                                <TableCell sx={{color:`${toggle ? 'black' : "white"}`}} align="center" component="th" scope="row" className={`font-bold `}>
+                                  Factor  Risk Ratio
                                 </TableCell>
                             </TableRow>
                             {riskFactorKeys.map((risk, index) => (
-                                <TableRow key={risk}>
-                                    <TableCell component="th" scope="row">
+                                <TableRow sx={{display:"inline-table", width:"100%"}} key={risk} className={`hover:bg-[silver] dark:hover:bg-[#454B59]`}>
+                                    <TableCell sx={{width:"200px", color:`${toggle ? 'black' : "white"}`}} align="left" >
                                         {risk}
                                     </TableCell>
-                                    <TableCell align="right">{riskFactorValues[index].toFixed(2)}</TableCell>
+                                    <TableCell sx={{color:`${toggle ? 'black' : "white"}`}} align="center">{riskFactorValues[index].toFixed(2)}</TableCell>
                                 </TableRow>
                             ))}
                         </td>
@@ -68,7 +69,7 @@ const Table = () => {
     };
 
     const [data, setData] = useState([]);
-    // Used for generating risk rating color scale 
+    // Used for generating risk rating Text color scale 
     const [min, setMin] = useState()
     const [max, setMax] = useState()
 
@@ -97,7 +98,7 @@ const Table = () => {
             setMin(min)
         }
 
-    }, [])
+    }, [Data])
 
     const columns = [
         {
@@ -105,7 +106,11 @@ const Table = () => {
             Label: "Asset Name",
             options: {
                 sortThirdClickReset: true,
-
+                setCellHeaderProps: v => ({style:  toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}       }),
+                setCellProps: v => {
+                    return {style:{fontSize: ".8em", color: `${toggle ? 'black' : "white"}` }}
+                },
+          
             }
 
         },
@@ -114,7 +119,10 @@ const Table = () => {
             Label: "Lat",
             options: {
                 sortThirdClickReset: true,
-
+                setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}   }),
+                setCellProps: v => {
+                    return {style:{fontSize: ".8em", color: `${toggle ? 'black' : "white"}` }}
+                },
             }
 
         },
@@ -123,7 +131,10 @@ const Table = () => {
             Label: "Long",
             options: {
                 sortThirdClickReset: true,
-
+                setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}   }),
+                setCellProps: v => {
+                    return {style:{fontSize: ".8em", color: `${toggle ? 'black' : "white"}` }}
+                },
             }
 
         },
@@ -132,7 +143,10 @@ const Table = () => {
             Label: "Business Category",
             options: {
                 sortThirdClickReset: true,
-
+                setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"} }),
+                setCellProps: v => {
+                    return {style:{fontSize: ".8em", color: `${toggle ? 'black' : "white"}` }}
+                },
             }
 
         },
@@ -143,10 +157,12 @@ const Table = () => {
                 sortThirdClickReset: true,
                 setCellProps: v => {
                     return {
-                        style: { color: `${generateColorScale(min,max,v)}` },
+                        style: { color: `${generateColorScale(min, max, v)}` },
                     }
 
                 },
+                setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"} }),
+
             }
 
         },
@@ -167,22 +183,94 @@ const Table = () => {
             Label: "Year",
             options: {
                 sortThirdClickReset: true,
-
+                setCellHeaderProps: v => ({style: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}}),
+                setCellProps: v => {
+                    return {style:{fontSize: ".8em", color: `${toggle ? 'black' : "white"}` }}
+                },
             }
 
         },
     ]
 
+    const getMuiTheme3 = () => createTheme({
+        components: {
+            MUIDataTableHeadCell: {
+                styleOverrides: {
+                    sortAction: {
+                        '& path': {
+                            color: "teal" // or whatever you need
+                        },
+                    },
+                    sortActive: {
+                        color: "teal"  // whatever you need
+                    }
+                }
+            },
+            MuiToolbar: {
+                styleOverrides: {
+                    root: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}
+                }
+            },
+            MuiTableBody: {
+                styleOverrides: {
+                    root: toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}
+                }
+            },
+            MuiTable: {
+                styleOverrides: {
+                    root:toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}
+                }
+            },
+            MUIDataTableToolbar: {
+                styleOverrides: {
+                    icon: {
+                        color:`${toggle ? 'grey' : "white"}`,
+                        '&:hover': {
+                            color: "teal"
+                        }
+                    },
+                }
+            },
+            MuiTableRow: {
+                styleOverrides: {
+                    root: {
+                        "&.MuiTableRow-hover": {
+                            "&:hover": {
+                                backgroundColor:`${toggle ? 'Silver' : " #454B59"}`,
+                            }
+                        }
+                    }
+                }
+            },
+            MUIDataTableSelectCell:{
+                styleOverrides: {
+                    root:toggle ? {backgroundColor:"white"} : {backgroundColor:"#131722"}
+                }
+            },
+
+            MuiIconButton:{
+                styleOverrides: {
+                    root:toggle ? {backgroundColor:"white", color:"black"} : {backgroundColor:"#131722", color:"white"}
+                }
+            }
+        }
+    });
+
     return (
 
         <React.Fragment>
             {columns.length > 0 &&
-                <MUIDataTable
-                    title={""}
-                    data={data}
-                    columns={columns}
-                    options={options}
-                />
+
+                <ThemeProvider theme={getMuiTheme3()}>
+
+                    <MUIDataTable
+                        title={""}
+                        data={data}
+                        columns={columns}
+                        options={options}
+                    />
+                </ThemeProvider>
+
             }
         </React.Fragment>
 

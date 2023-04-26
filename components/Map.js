@@ -98,6 +98,12 @@ const Map = ({ activeYear }) => {
                             }
                             icon={L.BeautifyIcon.icon(options)}
                             position={[obj["Lat"], obj["Long"]]}
+                            eventHandlers={{
+                                click: (v) => {
+                                  console.log(obj)
+                                },
+                              }}
+                            
                         >
                             <Popup>
                                 <p className={`inline`}> {obj["Asset Name"]} - {obj["Business Category"]} </p>

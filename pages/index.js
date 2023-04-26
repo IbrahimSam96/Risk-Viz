@@ -1,20 +1,29 @@
 // UI Components
 import Select from 'react-select';
+import PlaceIcon from '@mui/icons-material/Place';
+import InsightsIcon from '@mui/icons-material/Insights';
 
-import dynamic from 'next/dynamic'
+// Custom Components
 import Table from '../components/Tables';
 import Chart from '../components/Chart';
-
-
+import ThemeSwitch from '../components/ThemeSwitch';
 import { useData } from '../DataFetcher';
-import { useEffect, useId, useState } from 'react';
 
+// React/Next imports 
+import dynamic from 'next/dynamic'
+import { useEffect, useId, useState } from 'react';
+import { useRouter } from 'next/router';
+
+// Dynamically Import client-side graph
 const DynamicMap = dynamic(() => import('../components/Map'), {
     ssr: false,
 });
 
 const Home = () => {
+    // NextJS router
+    const router = useRouter();
 
+    // CTX - Fetches Data from Google Sheet
     const Data = useData();
     // Selecting Year State
     const [yearOptions, setYearOptions] = useState([]);
@@ -60,13 +69,36 @@ const Home = () => {
     // Selecting Chart Type State
     const [type, setType] = useState(options[0]);
 
-    return (
-        <div className={`h-full w-full min-h-screen grid grid-cols-[repeat(7,1fr)] grid-rows-[50px,150px,650px,250px,auto] bg-[white] `} >
+    // Theme Color
+    const [toggle, setToogle] = useState(true);
 
-            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-start self-center z-[100000000000]`}>
+
+    return (
+        <div className={`h-full w-full min-h-screen grid grid-cols-[repeat(7,1fr)] grid-rows-[50px,100px,650px,auto] bg-[white] dark:bg-[#181C28] `} >
+
+            <span className={`col-start-1 col-end-8 row-start-1 row-end-2 grid grid-cols-[100px,auto] dark:shadow dark:shadow-teal-800 bg-slate-300 dark:bg-[#11151F]`}>
+                <span onClick={() => {
+                    router.push('/')
+                }} className={`flex self-center mx-4 hover:cursor-pointer`} >
+                    <InsightsIcon className={`inline text-red-800`}/>
+                    <p className={`inline text-xl font-bold mx-1 dark:text-white`}>Risk</p>
+                    <p className={`inline text-base dark:text-white `}>Viz</p>
+                    <PlaceIcon className={`inline text-teal-400`}/>
+                </span>
+
+
+                <span className={`justify-self-end self-center mx-8`}>
+                    <ThemeSwitch setToogle={setToogle} toggle={toggle}/>
+                </span>
+
+            </span>
+
+        
+
+            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-start self-center z-[100000000000] mx-4`}>
 
                 <span className={`flex`}>
-                    <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] my-auto mx-4`}>
+                    <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] dark:text-white mr-4 my-auto`}>
                         Select Year
                     </p>
 
@@ -85,10 +117,10 @@ const Home = () => {
 
             </span>
 
-            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-end self-center z-[100000000000]`}>
+            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-end self-center z-[100000000000] mx-4`}>
 
                 <span className={`flex`}>
-                    <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] my-auto mx-4`}>
+                    <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] dark:text-white my-auto mr-4`}>
                         Chart Type
                     </p>
 
@@ -117,8 +149,8 @@ const Home = () => {
 
             </div>
 
-            <div className={`col-start-1 col-end-8 row-start-4 row-end-5 mx-4 my-4 `}>
-                <Table />
+            <div className={`col-start-1 col-end-8 row-start-4 row-end-5 m-10 `}>
+                <Table toggle={toggle}/>
 
             </div>
 
