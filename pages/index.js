@@ -236,17 +236,17 @@ const Home = () => {
 
             </span>
 
-            <div className={`col-start-1 col-end-4 row-start-3 row-end-4 mx-4 max-w-[1100px] `}>
+            <div className={`col-start-1 col-end-8 sm:col-start-1 sm:col-end-4 row-start-3 row-end-4 mx-4 max-w-[1100px] `}>
                 <DynamicMap activeYear={activeYear?.value} />
 
             </div>
 
-            <div className={`col-start-4 col-end-8 row-start-3 row-end-3 mx-4 max-w-[1100px]`}>
+            <div className={`col-start-1 col-end-8 sm:col-start-4 sm:col-end-8 row-start-4 row-end-5 sm:row-start-3 sm:row-end-4 mx-4 max-w-[1100px]`}>
                 <LineGraph activeYear={activeYear?.value} type={type && type} />
 
             </div>
 
-            <div className={`col-start-1 col-end-8 row-start-4 row-end-5 m-10 `}>
+            <div className={`col-start-1 col-end-8  row-start-5 row-end-6 sm:row-start-4 sm:row-end-5 m-10 max-w-[2000px] `}>
                 <Table activeYear={activeYear?.value} toggle={toggle} />
 
             </div>
