@@ -17,7 +17,7 @@ const Chart = ({ activeYear, type }) => {
 
         if (Data.length > 0 && activeYear) {
 
-            // Finds Unique Business Categories / Asset Name / Lat etc..
+            // Finds Unique values Business Categories / Asset Name / Lat etc..
             const hash = {};
             for (let i = 0; i < Data.length; i++) {
                 hash[Data[i][type]] = true;
@@ -65,7 +65,8 @@ const Chart = ({ activeYear, type }) => {
                         } else {
                             return x[0] < y[0] ? -1 : 1
                         }
-                    }),
+                    }
+                    ),
                     visible: type == "Asset Name" ? false : true,
                     // Datapoints above this range won't be displayed unless with only 2 dimensional array values. i,e no risk factors or other datapoints 
                     turboThreshold: 1500
