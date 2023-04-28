@@ -173,7 +173,7 @@ const Home = () => {
 
             </span>
 
-            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-start self-center z-[100000000000] mx-4`}>
+            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-start self-center z-[100000000000] mx-4 sm:mb-0 mb-12`}>
 
                 <span className={`flex`}>
                     <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] dark:text-white mr-4 my-auto`}>
@@ -205,7 +205,7 @@ const Home = () => {
 
             </span>
 
-            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-end self-center z-[100000000000] mx-4`}>
+            <span className={`col-start-1 col-end-8 row-start-2 row-end-3 justify-self-start sm:justify-self-end self-center z-[100000000000] mx-4 sm:mt-0 mt-14  `}>
 
                 <span className={`flex`}>
                     <p className={` text-[1em] font-medium font-serif text-[rgb(36,36,36)] dark:text-white my-auto mr-4`}>
