@@ -16,7 +16,6 @@ const Table = ({toggle, activeYear}) => {
         expandableRows: true,
         renderExpandableRow: (rowData, rowMeta) => {
             // console.log(rowData, rowMeta);
-            console.log(JSON.parse(rowData[5]))
 
             let riskFactorKeys = Object.keys(JSON.parse(rowData[5]));
             let riskFactorValues = Object.values(JSON.parse(rowData[5]));
