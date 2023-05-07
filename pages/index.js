@@ -156,7 +156,7 @@ const Home = () => {
     return (
         <div className={`h-full w-full min-h-screen grid grid-cols-[repeat(7,1fr)] grid-rows-[50px,100px,650px,auto] bg-[white] dark:bg-[#181C28] `} >
 
-            <span className={`col-start-1 col-end-8 row-start-1 row-end-2 grid grid-cols-[100px,auto] dark:shadow dark:shadow-teal-800 bg-slate-300 dark:bg-[#11151F]`}>
+            <span className={`col-start-1 col-end-8 row-start-1 row-end-2 grid grid-cols-[100px,auto] dark:shadow dark:shadow-teal-800 bg-cyan-500 dark:bg-[#11151F]`}>
                 <span onClick={() => {
                     router.push('/')
                 }} className={`flex self-center mx-4 hover:cursor-pointer`} >
