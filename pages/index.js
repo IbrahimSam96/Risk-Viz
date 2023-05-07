@@ -116,7 +116,7 @@ const Home = () => {
                 options["group"] = 'Asset Name'
 
                 AssetOptions.push(options);
-                
+
             }
 
             for (let k = 0; k < uniqueLatArr.length; k++) {
@@ -181,8 +181,9 @@ const Home = () => {
                     </p>
 
                     <Select
+
                         instanceId={id}
-                        className={``}
+                        className={`needsclick`}
                         value={activeYear}
                         onChange={(v) => {
 
@@ -213,7 +214,7 @@ const Home = () => {
                     </p>
                     <Select
                         instanceId={id}
-                        className={`w-[250px]`}
+                        className={`w-[250px] needsclick`}
                         value={type && type}
                         onChange={(v) => {
                             setType(v)
